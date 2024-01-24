@@ -63,9 +63,11 @@ export class KeyValueStoreClient extends BaseClient {
     }
 
     async update(newFields: storage.KeyValueStoreClientUpdateOptions = {}): Promise<storage.KeyValueStoreInfo> {
-        const parsed = s.object({
-            name: s.string.lengthGreaterThan(0).optional,
-        }).parse(newFields);
+        const parsed = s
+            .object({
+                name: s.string.lengthGreaterThan(0).optional,
+            })
+            .parse(newFields);
 
         // Check by id
         const existingStoreById = await findOrCacheKeyValueStoreByPossibleId(this.client, this.name ?? this.id);
@@ -112,13 +114,12 @@ export class KeyValueStoreClient extends BaseClient {
     }
 
     async listKeys(options: storage.KeyValueStoreClientListOptions = {}): Promise<storage.KeyValueStoreClientListData> {
-        const {
-            limit = DEFAULT_API_PARAM_LIMIT,
-            exclusiveStartKey,
-        } = s.object({
-            limit: s.number.greaterThan(0).optional,
-            exclusiveStartKey: s.string.optional,
-        }).parse(options);
+        const { limit = DEFAULT_API_PARAM_LIMIT, exclusiveStartKey } = s
+            .object({
+                limit: s.number.greaterThan(0).optional,
+                exclusiveStartKey: s.string.optional,
+            })
+            .parse(options);
 
         // Check by id
         const existingStoreById = await findOrCacheKeyValueStoreByPossibleId(this.client, this.name ?? this.id);
@@ -156,9 +157,7 @@ export class KeyValueStoreClient extends BaseClient {
         const lastItemInStore = items[items.length - 1];
         const lastSelectedItem = limitedItems[limitedItems.length - 1];
         const isLastSelectedItemAbsolutelyLast = lastItemInStore === lastSelectedItem;
-        const nextExclusiveStartKey = isLastSelectedItemAbsolutelyLast
-            ? undefined
-            : lastSelectedItem.key;
+        const nextExclusiveStartKey = isLastSelectedItemAbsolutelyLast ? undefined : lastSelectedItem.key;
 
         existingStoreById.updateTimestamps(false);
 
@@ -200,7 +199,7 @@ export class KeyValueStoreClient extends BaseClient {
         const record: storage.KeyValueStoreRecord = {
             key: entry.key,
             value: entry.value,
-            contentType: entry.contentType ?? mime.contentType(entry.extension) as string,
+            contentType: entry.contentType ?? (mime.contentType(entry.extension) as string),
         };
 
         if (options.stream) {
@@ -227,7 +226,9 @@ export class KeyValueStoreClient extends BaseClient {
                 s.instance(ArrayBuffer),
                 s.typedArray(),
                 // disabling validation will make shapeshift only check the object given is an actual object, not null, nor array
-                s.object({}).setValidationEnabled(false),
+                s
+                    .object({})
+                    .setValidationEnabled(false),
             ),
             contentType: s.string.lengthGreaterThan(0).optional,
         }).parse(record);
