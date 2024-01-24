@@ -1,0 +1,15 @@
+{
+	"formatter": {
+		"ignore": ["website/**"]
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"semicolons": "always",
+			"trailingComma": "all",
+			"lineWidth": 160,
+			"indentStyle": "space",
+			"indentWidth": 4
+		}
+	}
+}
